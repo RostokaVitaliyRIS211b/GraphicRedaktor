@@ -5,12 +5,13 @@ namespace RealizationOfApp.Simplexs
     public class Line : EvObject
     {
         public Point Point1 { get; set; }
-        public Point? Point2 { get; set; }
-        public bool IsCatched { get; protected set; }
-        public Line(Point point1)
+        public Point Point2 { get; set; }
+        public bool IsCatched { get; set; }
+        public Line(Point point1,Vector2f MouseCoords)
         {
             Point1 = point1;
-            Point2 = null;
+            point1.IGetRemoved+=x => this.IsNeedToRemove = x==Point1 || x==Point2;
+            Point2 = new(MouseCoords,"");
             IsCatched = true;
         }
         public Line(Point point1, Point point2)

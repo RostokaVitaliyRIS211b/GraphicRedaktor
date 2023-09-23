@@ -23,9 +23,9 @@ namespace RealizationOfApp.Creators
 
         private void GlobalEventHandler_OnMouseButtonPressed(object? source, MouseButtonEventArgs e)
         {
-            if (e.Button==Mouse.Button.Left && IsKeyPressed(Key.Delete) && source is Application app2)
+            if (e.Button==Mouse.Button.Middle && source is Application app2)
             {
-                EventDrawable? obj = app2.eventDrawables.First(x => x.Contains(e.X, e.Y));
+                EventDrawable? obj = app2.eventDrawables.First(x => x.Contains(e.X, e.Y) && !x.IsNeedToRemove);
                 if(obj is not null)
                     obj.IsNeedToRemove = true;
             }
@@ -42,14 +42,19 @@ namespace RealizationOfApp.Creators
             }
             if (e.Button==Mouse.Button.Left && IsKeyPressed(Key.L) && source is Application app1)
             {
-                Point? pon = app1.eventDrawables.Find(x => 
+                Point? pon = (from elem in app1.eventDrawables
+                              where elem is Point
+                              let u = elem as Point
+                              where u.Contains(e.X, e.Y)
+                              select u).FirstOrDefault();
+                if (pon is not null)
                 {
-                    Point? po = x as Point;
-                    return x is Point && (bool)po?.Contains(e.X, e.Y);
-                }) as Point;
-                if(pon is not null)
-                {
-                    
+                    Line line = new(pon, new Vector2f(e.X, e.Y));
+                    conveirLine.ProcessObj(line);
+                    line.IsAlive = true;
+                    app1.eventDrawables.Add(line);
+                    pon.IsCatched = false;
+                    pon.IsAlive = false;
                 }
             }
             //Console.WriteLine((e.Button==Mouse.Button.Left)+" "+IsKeyPressed(Key.P)+" "+(source is Application));

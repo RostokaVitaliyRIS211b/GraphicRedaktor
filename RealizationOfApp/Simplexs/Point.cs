@@ -21,8 +21,8 @@ namespace RealizationOfApp.Simplexs
             get => base.IsNeedToRemove;
             set
             {
-                IsNeedToRemove = value;
-                if (!IsNeedToRemove)
+                base.IsNeedToRemove = value;
+                if (IsNeedToRemove)
                     IGetRemoved?.Invoke(this);
             }
         }

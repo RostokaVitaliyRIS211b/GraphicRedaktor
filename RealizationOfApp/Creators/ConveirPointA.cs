@@ -55,7 +55,7 @@ namespace RealizationOfApp.Creators
         {
             return (source, e) =>
             {
-                point.IsTextVisible = e.Code!=Key.LAlt;
+                point.IsTextVisible = false;
             };
         }
     }
