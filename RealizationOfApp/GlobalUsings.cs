@@ -1,0 +1,11 @@
+﻿global using SFML.Audio;
+global using SFML.Graphics;
+global using SFML.System;
+global using SFML.Window;
+global using Textboxes;
+global using SfmlAppLib;
+global using RealizationOfApp.UI_Classes;
+global using RealizationOfApp.Simplexs;
+global using RealizationOfApp.Factories;
+global using static SFML.Window.Keyboard;
+global using RealizationOfApp.Creators;
