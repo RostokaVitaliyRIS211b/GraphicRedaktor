@@ -48,7 +48,7 @@ namespace RealizationOfApp.Simplexs
         {
             return circle.Contains(vector);
         }
-        public bool Contains(float x, float y)
+        public override bool Contains(float x, float y)
         {
             return circle.Contains(x, y);
         }

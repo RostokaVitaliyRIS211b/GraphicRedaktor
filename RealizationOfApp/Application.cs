@@ -15,7 +15,7 @@ namespace RealizationOfApp
             messageBox.SetSizeCharacterText(16);
             messageBox.SetPos(CurrentWidth/2, CurrentHeight-30);
             messageBox.SetString("");
-            GlobalEventHandler handler = new();
+            GlobalEventHandler handler = new(new ConveirPointA(),new ConveirLineA());
             eventHandlers.Add(handler);
             window = new RenderWindow(new VideoMode(CurrentWidth, CurrentHeight), "RSAcrypto");
             window.SetFramerateLimit(60);

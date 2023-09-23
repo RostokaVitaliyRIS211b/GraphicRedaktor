@@ -10,25 +10,47 @@ namespace RealizationOfApp.Creators
         public event Action<object?, MouseWheelScrollEventArgs>? OnMouseWheelScrolled;
         public event Action<object?, KeyEventArgs>? OnKeyPressed;
         public event Action<object?, KeyEventArgs>? OnKeyReleased;
+        IConveir<Point> conveirPoint;
+        IConveir<Line> conveirLine;
 
-        public GlobalEventHandler()
+        public GlobalEventHandler(IConveir<Point> conveir1, IConveir<Line> conveir2)
         {
+            conveirPoint = conveir1;
+            conveirLine = conveir2;
             OnKeyPressed+=GlobalEventHandler_OnKeyPressed;
             OnMouseButtonPressed+=GlobalEventHandler_OnMouseButtonPressed;
         }
 
         private void GlobalEventHandler_OnMouseButtonPressed(object? source, MouseButtonEventArgs e)
         {
-            if(e.Button==Mouse.Button.Left && IsKeyPressed(Key.P) && source is Application app)
+            if (e.Button==Mouse.Button.Left && IsKeyPressed(Key.Delete) && source is Application app2)
+            {
+                EventDrawable? obj = app2.eventDrawables.First(x => x.Contains(e.X, e.Y));
+                if(obj is not null)
+                    obj.IsNeedToRemove = true;
+            }
+            if (e.Button==Mouse.Button.Left && IsKeyPressed(Key.P) && source is Application app)
             {
                 Point p = new(e.X, e.Y, "");
-                ConveirPointA conveir = new();
+               
                 app.eventDrawables.Add(p);
                 EnterTextPoint enterText = new(new Vector2f(e.X, e.Y), p);
                 enterText.IsAlive = true;
-                conveir.ProcessObj(p);
+                conveirPoint.ProcessObj(p);
                 app.eventDrawables.Add(enterText);
                 app.messageBox.SetString("Введите имя точки");
+            }
+            if (e.Button==Mouse.Button.Left && IsKeyPressed(Key.L) && source is Application app1)
+            {
+                Point? pon = app1.eventDrawables.Find(x => 
+                {
+                    Point? po = x as Point;
+                    return x is Point && (bool)po?.Contains(e.X, e.Y);
+                }) as Point;
+                if(pon is not null)
+                {
+                    
+                }
             }
             //Console.WriteLine((e.Button==Mouse.Button.Left)+" "+IsKeyPressed(Key.P)+" "+(source is Application));
         }
