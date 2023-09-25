@@ -1,5 +1,4 @@
 ﻿
-
 namespace RealizationOfApp
 {
     public class Application
@@ -8,6 +7,7 @@ namespace RealizationOfApp
         public List<IEventHandler> eventHandlers = new();
         public uint CurrentWidth = 1280, CurrentHeight = 720;
         public Textbox messageBox = new();
+        public View view = new();
         public RenderWindow window;
         public Application()
         {
@@ -17,7 +17,10 @@ namespace RealizationOfApp
             messageBox.SetString("");
             GlobalEventHandler handler = new(new ConveirPointA(),new ConveirLineA());
             eventHandlers.Add(handler);
-            window = new RenderWindow(new VideoMode(CurrentWidth, CurrentHeight), "RSAcrypto");
+            //view.Reset(new FloatRect(0, 0, CurrentWidth, CurrentHeight));
+            Grid grid = new(new Vector2f(CurrentWidth/2,CurrentHeight/2), CurrentWidth, CurrentHeight);
+            eventDrawables.Add(grid);
+            window = new RenderWindow(new VideoMode(CurrentWidth, CurrentHeight), "graphic redaktor");
             window.SetFramerateLimit(60);
             Subscribe();
             window.Closed+=Closed;
@@ -28,6 +31,7 @@ namespace RealizationOfApp
             {
                 window.DispatchEvents();
                 DeleteObjects();
+                //window.SetView(view);
                 window.Clear(new(236, 253, 230));
                 foreach (EventDrawable eventDrawable in eventDrawables)
                     window.Draw(eventDrawable);

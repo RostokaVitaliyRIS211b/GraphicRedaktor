@@ -40,7 +40,7 @@ namespace RealizationOfApp.UI_Classes
                 }
                 else
                 {
-                    app.messageBox.SetString("This name already exists in graph");
+                    app.messageBox.SetString("Такое имя уже существует");
 
                 }
                 IsNeedToRemove = true;

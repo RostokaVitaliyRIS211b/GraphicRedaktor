@@ -11,23 +11,24 @@ namespace RealizationOfApp.UI_Classes
         public bool isTextVisible = true;
         protected CircleShape circle;
         protected Text text;
-        protected Font font;
+        protected static Font font;
+        static SpecialCircleTextbox()
+        {
+            font = new(Directory.GetCurrentDirectory()+"/Impact.ttf");
+        }
         public SpecialCircleTextbox()
         {
             circle = new();
-            font = new(Directory.GetCurrentDirectory()+"/Impact.ttf");
             text = new(String.Empty, font);
         }
-        public SpecialCircleTextbox(CircleShape circle, Text text, Font font)
+        public SpecialCircleTextbox(CircleShape circle, Text text)
         {
             this.circle=circle;
             this.text=text;
-            this.font=font;
         }
         public SpecialCircleTextbox(in SpecialCircleTextbox circleTextbox)
         {
             circle = new();
-            font = circleTextbox.font;
             text = new(circleTextbox.GetString(), font);
             SetCharacterSize(circleTextbox.GetText().CharacterSize);
             SetString(circleTextbox.GetString());

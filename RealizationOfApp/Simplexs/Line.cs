@@ -6,6 +6,7 @@ namespace RealizationOfApp.Simplexs
     {
         public Point Point1 { get; set; }
         public Point Point2 { get; set; }
+        public Color LineColor { get; set; } = Color.Black;
         public bool IsCatched { get; set; }
         public Line(Point point1,Vector2f MouseCoords)
         {
@@ -27,7 +28,7 @@ namespace RealizationOfApp.Simplexs
         }
         public Vertex[] ToArr()
         {
-            return new Vertex[2] { new Vertex(Point1.Position, Color.Black), new Vertex(Point2.Position, Color.Black) };
+            return new Vertex[2] { new Vertex(Point1.Position, LineColor), new Vertex(Point2.Position, LineColor) };
         }
         public override void Draw(RenderTarget target, RenderStates states)
         {

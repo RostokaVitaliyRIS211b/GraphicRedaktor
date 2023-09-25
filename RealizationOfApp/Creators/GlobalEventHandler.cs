@@ -52,7 +52,7 @@ namespace RealizationOfApp.Creators
                     Line line = new(pon, new Vector2f(e.X, e.Y));
                     conveirLine.ProcessObj(line);
                     line.IsAlive = true;
-                    app1.eventDrawables.Add(line);
+                    app1.eventDrawables.Insert(0,line);
                     pon.IsCatched = false;
                     pon.IsAlive = false;
                 }

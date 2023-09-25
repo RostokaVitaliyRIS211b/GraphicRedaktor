@@ -15,14 +15,13 @@ namespace RealizationOfApp.Creators
             obj.OnMouseButtonReleased+=GetOnMouseButtonReleased(obj);
             obj.OnKeyPressed+=GetOnKeyPressed(obj);
             obj.OnKeyReleased+=GetOnKeyReleased(obj);
-
         }
         public Action<object?, MouseMoveEventArgs>? GetOnMouseMoved(Line line)
         {
             return (source, e) =>
             {
                 if (line.IsCatched && line.IsAlive)
-                    line.Point2 = new(new Vector2f(e.X, e.Y), "");
+                    line.Point2.Position = new Vector2f(e.X,e.Y);
             };
         }
         public Action<object?, MouseButtonEventArgs>? GetOnMouseButtonPressed(Line line)

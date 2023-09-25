@@ -22,7 +22,10 @@ namespace RealizationOfApp.Creators
             return (source, e) =>
             {
                 if (point.IsCatched)
+                {
                     point.Position = new Vector2f(e.X, e.Y);
+                }
+                    
             };
         }
         public Action<object?, MouseButtonEventArgs>? GetOnMouseButtonPressed(Point point)
