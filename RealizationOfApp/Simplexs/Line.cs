@@ -4,6 +4,7 @@ namespace RealizationOfApp.Simplexs
 {
     public class Line : EvObject
     {
+        //TODO добавить вычисление уранения по двум точкам
         public Point Point1 { get; set; }
         public Point Point2 { get; set; }
         public Color LineColor { get; set; } = Color.Black;
@@ -30,6 +31,8 @@ namespace RealizationOfApp.Simplexs
         {
             return new Vertex[2] { new Vertex(Point1.Position, LineColor), new Vertex(Point2.Position, LineColor) };
         }
+        public (float, float, float) GetEquvalence() => (Point2.Position.X-Point1.Position.X,Point1.Position.Y-Point2.Position.Y,
+            Point1.Position.X*Point2.Position.Y-Point2.Position.X*Point1.Position.Y);
         public override void Draw(RenderTarget target, RenderStates states)
         {
             target.Draw(ToArr(), PrimitiveType.Lines, states);

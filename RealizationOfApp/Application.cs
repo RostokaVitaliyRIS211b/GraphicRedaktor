@@ -1,4 +1,6 @@
 ﻿
+using System.Net.Http.Headers;
+
 namespace RealizationOfApp
 {
     public class Application
@@ -7,20 +9,28 @@ namespace RealizationOfApp
         public List<IEventHandler> eventHandlers = new();
         public uint CurrentWidth = 1280, CurrentHeight = 720;
         public Textbox messageBox = new();
-        public View view = new();
+        RectangleShape field;
+        //public View view = new();
         public RenderWindow window;
+        public Vector2i mousePosLast;
         public Application()
         {
             messageBox.SetColorText(Color.Black);
             messageBox.SetSizeCharacterText(16);
-            messageBox.SetPos(CurrentWidth/2, CurrentHeight-30);
+            messageBox.SetPos(100, CurrentHeight-30);
             messageBox.SetString("");
             GlobalEventHandler handler = new(new ConveirPointA(),new ConveirLineA());
             eventHandlers.Add(handler);
             //view.Reset(new FloatRect(0, 0, CurrentWidth, CurrentHeight));
-            Grid grid = new(new Vector2f(CurrentWidth/2,CurrentHeight/2), CurrentWidth, CurrentHeight);
+            Grid grid = new(new Vector2f((CurrentWidth+200)/2,CurrentHeight/2), CurrentWidth, CurrentHeight,200);
             eventDrawables.Add(grid);
-            window = new RenderWindow(new VideoMode(CurrentWidth, CurrentHeight), "graphic redaktor");
+            field = new();
+            field.FillColor=new(236, 253, 230);
+            field.Size = new Vector2f(200, CurrentHeight);
+            field.Position = new(0,0);
+            field.OutlineColor = Color.Black;
+            field.OutlineThickness = 2;
+            window = new RenderWindow(new VideoMode(CurrentWidth, CurrentHeight), "Graphic redaktor");
             window.SetFramerateLimit(60);
             Subscribe();
             window.Closed+=Closed;
@@ -31,11 +41,12 @@ namespace RealizationOfApp
             {
                 window.DispatchEvents();
                 DeleteObjects();
-                //window.SetView(view);
                 window.Clear(new(236, 253, 230));
                 foreach (EventDrawable eventDrawable in eventDrawables)
                     window.Draw(eventDrawable);
+                window.Draw(field);
                 window.Draw(messageBox);
+                mousePosLast = Mouse.GetPosition(window);
                 window.Display();
             }
         }
@@ -60,6 +71,10 @@ namespace RealizationOfApp
 
         public void MouseMoved(object? source, MouseMoveEventArgs e)
         {
+            for (int i = 0; i< eventHandlers.Count; ++i)
+            {
+                eventHandlers[i].MouseMoved(this, e);
+            }
             for (int i = 0; i<eventDrawables.Count; ++i)
             {
                 eventDrawables[i].MouseMoved(this, e);

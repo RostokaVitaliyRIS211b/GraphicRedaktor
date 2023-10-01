@@ -8,6 +8,7 @@ namespace RealizationOfApp.Creators
 {
     public class ConveirPointA : IConveir<Point>
     {
+        //TODO Добавить прилипание к сетке по координатам кратным едичиному делению сетки
         public void ProcessObj(Point obj)
         {
             obj.OnMouseMoved+=GetOnMouseMoved(point: obj);
@@ -15,7 +16,6 @@ namespace RealizationOfApp.Creators
             obj.OnMouseButtonReleased+=GetOnMouseButtonReleased(obj);
             obj.OnKeyPressed+=GetOnKeyPressed(obj);
             obj.OnKeyReleased+=GetOnKeyReleased(obj);
-
         }
         public Action<object?, MouseMoveEventArgs>? GetOnMouseMoved(Point point)
         {
@@ -25,7 +25,7 @@ namespace RealizationOfApp.Creators
                 {
                     point.Position = new Vector2f(e.X, e.Y);
                 }
-                    
+                point.FillColor = point.Contains(e.X, e.Y) ? Color.Magenta : point.BuffColor;
             };
         }
         public Action<object?, MouseButtonEventArgs>? GetOnMouseButtonPressed(Point point)

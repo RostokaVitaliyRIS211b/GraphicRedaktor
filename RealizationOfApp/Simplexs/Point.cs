@@ -32,6 +32,7 @@ namespace RealizationOfApp.Simplexs
             circle = new(Shablones.GetShablone1());
             circle.SetPosition(coords.X, coords.Y);
             circle.SetString(name);
+            BuffColor = circle.GetFillColorCircle();
         }
         public Point (float x,float y,string name)
         {
@@ -39,14 +40,20 @@ namespace RealizationOfApp.Simplexs
             circle = new(Shablones.GetShablone1());
             circle.SetPosition(x, y);
             circle.SetString(name);
+            BuffColor = circle.GetFillColorCircle();
         }
         public bool IsTextVisible { get => circle.isTextVisible; set => circle.isTextVisible=value; }
-        public Color BuffColor;
+        public Color BuffColor { get; }
+        public Color FillColor { get => circle.GetFillColorCircle(); set => circle.SetFillColorCircle(value); }
         public Vector2f Position { get => circle.GetPosition(); set => circle.SetPosition(value); }
 
         public bool Contains(Vector2f vector)
         {
             return circle.Contains(vector);
+        }
+        public override void Move(float deltaX, float deltaY)
+        {
+            Position = new(Position.X+deltaX, Position.Y+deltaY);
         }
         public override bool Contains(float x, float y)
         {

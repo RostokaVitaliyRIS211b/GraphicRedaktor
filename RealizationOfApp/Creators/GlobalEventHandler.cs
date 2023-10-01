@@ -4,6 +4,7 @@ namespace RealizationOfApp.Creators
 {
     public class GlobalEventHandler:IEventHandler
     {
+        //TODO Чтобы при зажатии мышкой двигались объекты
         public event Action<object?, MouseMoveEventArgs>? OnMouseMoved;
         public event Action<object?, MouseButtonEventArgs>? OnMouseButtonPressed;
         public event Action<object?, MouseButtonEventArgs>? OnMouseButtonReleased;
@@ -12,16 +13,34 @@ namespace RealizationOfApp.Creators
         public event Action<object?, KeyEventArgs>? OnKeyReleased;
         IConveir<Point> conveirPoint;
         IConveir<Line> conveirLine;
-
         public GlobalEventHandler(IConveir<Point> conveir1, IConveir<Line> conveir2)
         {
             conveirPoint = conveir1;
             conveirLine = conveir2;
             OnKeyPressed+=GlobalEventHandler_OnKeyPressed;
             OnMouseButtonPressed+=GlobalEventHandler_OnMouseButtonPressed;
+            OnMouseMoved+=GlobalEventHandler_OnMouseMoved;
         }
 
-        private void GlobalEventHandler_OnMouseButtonPressed(object? source, MouseButtonEventArgs e)
+        protected void GlobalEventHandler_OnMouseMoved(object? source, MouseMoveEventArgs e)
+        {
+            if (Mouse.IsButtonPressed(Mouse.Button.Left) && source is Application app4)
+            {
+                EventDrawable? contains = (from elem in app4.eventDrawables
+                                           where elem.Contains(e.X,e.Y)
+                                           select elem).FirstOrDefault();
+                if(contains is null)
+                {
+                    for (int i=0;i<app4.eventDrawables.Count;++i)
+                    {
+                        app4.eventDrawables[i].Move(e.X-app4.mousePosLast.X, e.Y-app4.mousePosLast.Y);
+                    }
+                    //Console.WriteLine($"{e.X-app4.mousePosLast.X},  {e.Y-app4.mousePosLast.Y}");
+                }
+            }
+        }
+
+        protected void GlobalEventHandler_OnMouseButtonPressed(object? source, MouseButtonEventArgs e)
         {
             if (e.Button==Mouse.Button.Middle && source is Application app2)
             {
