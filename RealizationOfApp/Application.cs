@@ -32,7 +32,7 @@ namespace RealizationOfApp
             field.OutlineColor = Color.Black;
             field.OutlineThickness = 2;
             window = new RenderWindow(new VideoMode(CurrentWidth, CurrentHeight), "Graphic redaktor");
-            window.SetFramerateLimit(144);
+            window.SetFramerateLimit(60);
             eventDrawables.Add(new GUI(new GUIFactoryA()));
             Subscribe();
             window.Closed+=Closed;
@@ -44,7 +44,8 @@ namespace RealizationOfApp
                 window.DispatchEvents();
                 DeleteObjects();
                 window.Clear(new(236, 253, 230));
-                foreach (EventDrawable eventDrawable in eventDrawables.Where(x=>x is not GUI))
+                window.Draw(eventDrawables.Where(x => x is Grid).First());
+                foreach (EventDrawable eventDrawable in eventDrawables.Where(x=>x is not GUI && x is not Grid))
                     window.Draw(eventDrawable);
                 window.Draw(field);
                 window.Draw(eventDrawables.Where(x => x is GUI).First());
