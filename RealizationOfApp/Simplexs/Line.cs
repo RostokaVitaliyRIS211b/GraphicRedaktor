@@ -40,10 +40,10 @@ namespace RealizationOfApp.Simplexs
         public override bool Contains(float x, float y)
         {
             (float, float, float) coef = GetEquvalence();
-            float baseB = coef.Item3,deltaB=10;
+            float deltaB=5000;
             float dlina1 = Dlina(Point1.Position, new(x, y)), dlina2 = Dlina(Point2.Position, new(x, y));
             float dlinaLine = Dlina();
-            return (coef.Item1*y+coef.Item2*x+coef.Item3-deltaB)>0 && (coef.Item1*y+coef.Item2*x+coef.Item3+deltaB)<0 && dlina1<dlinaLine && dlina2<dlinaLine;
+            return (coef.Item1*y+coef.Item2*x+coef.Item3-deltaB)<0 && (coef.Item1*y+coef.Item2*x+coef.Item3+deltaB)>0 && dlina1<dlinaLine && dlina2<dlinaLine;
         }
         public override void Draw(RenderTarget target, RenderStates states)
         {

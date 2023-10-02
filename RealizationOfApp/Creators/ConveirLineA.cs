@@ -18,10 +18,18 @@ namespace RealizationOfApp.Creators
         }
         public Action<object?, MouseMoveEventArgs>? GetOnMouseMoved(Line line)
         {
+            Color bufFColor = line.LineColor;
             return (source, e) =>
             {
                 if (line.IsCatched && line.IsAlive)
                     line.Point2.Position = new Vector2f(e.X,e.Y);
+                line.LineColor = line.Contains(e.X, e.Y) ? Color.Magenta : bufFColor;
+                if(line.Contains(e.X, e.Y) && Mouse.IsButtonPressed(Mouse.Button.Left) && source is Application app 
+                && !line.Point1.Contains(e.X,e.Y) && !line.Point2.Contains(e.X, e.Y))
+                {
+                    line.Point1.Move(e.X-app.mousePosLast.X, e.Y-app.mousePosLast.Y);
+                    line.Point2.Move(e.X-app.mousePosLast.X, e.Y-app.mousePosLast.Y);
+                }
             };
         }
         public Action<object?, MouseButtonEventArgs>? GetOnMouseButtonPressed(Line line)
