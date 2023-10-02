@@ -10,13 +10,14 @@ namespace RealizationOfApp.Creators
     public class ConveirButtonCreatePoint:IConveir<EvButton>
     {
         GlobalEventHandler eventHandler;
+        bool isSubscribed = false;
         public void ProcessObj(EvButton obj)
         {
             obj.OnMouseButtonReleased+=GetOnMouseButtonReleased(obj);
         }
         public Action<object?, ICollection<EventDrawableGUI>, MouseButtonEventArgs>? GetOnMouseButtonReleased(EvButton evButton)
         {
-            bool isSubscribed = false;
+           
             return (source, IC, e) =>
             {
                 if(evButton.IsAlive && source is Application app)
@@ -28,18 +29,26 @@ namespace RealizationOfApp.Creators
                     if (!isSubscribed)
                     {
                         eventHandler.OnMouseButtonPressed+=MousePressedCreatePoint;
+                        eventHandler.OnKeyPressed+=KeyEscUnSubscribe;
                         isSubscribed = true;
                         app.messageBox.SetString("Режим: Создать точку");
                         app.messageBox.SetPos(100, 30);
                     }
                     else
                     {
-                        eventHandler.OnMouseButtonPressed-=MousePressedCreatePoint;
-                        isSubscribed = false;
-                        app.messageBox.SetString("Режим:");
-                        app.messageBox.SetPos(100, 30);
+                        UnSubscribe(app);
                     }
                
+                }
+                else if(isSubscribed && source is Application app2)
+                {
+                    EvButton? evCatched = (from elem in IC
+                                           where elem is EvButton
+                                           let u = elem as EvButton
+                                           where u.textbox.Contains(e.X,e.Y)
+                                           select u).FirstOrDefault();
+                    if(evCatched is not null)
+                    UnSubscribe(app2);
                 }
                 evButton.IsAlive = false;
             };
@@ -60,6 +69,21 @@ namespace RealizationOfApp.Creators
                     app.messageBox.SetPos(100, 30);
                 }
             }
+        }
+        void KeyEscUnSubscribe(object? source, KeyEventArgs e)
+        {
+            if (e.Code==Key.Escape  && source is Application app)
+            {
+                UnSubscribe(app);
+            }
+        }
+        void UnSubscribe(Application app)
+        {
+            eventHandler.OnMouseButtonPressed-=MousePressedCreatePoint;
+            eventHandler.OnKeyPressed-=KeyEscUnSubscribe;
+            isSubscribed = false;
+            app.messageBox.SetString("Режим:");
+            app.messageBox.SetPos(100, 30);
         }
     }
 }
