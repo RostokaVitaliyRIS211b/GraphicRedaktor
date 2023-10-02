@@ -17,8 +17,8 @@ namespace RealizationOfApp
         {
             messageBox.SetColorText(Color.Black);
             messageBox.SetSizeCharacterText(16);
-            messageBox.SetPos(100, CurrentHeight-30);
-            messageBox.SetString("");
+            messageBox.SetPos(100, 30);
+            messageBox.SetString("Режим:");
             GlobalEventHandler handler = new(new ConveirPointA(),new ConveirLineA());
             eventHandlers.Add(handler);
             //view.Reset(new FloatRect(0, 0, CurrentWidth, CurrentHeight));
@@ -32,6 +32,7 @@ namespace RealizationOfApp
             field.OutlineThickness = 2;
             window = new RenderWindow(new VideoMode(CurrentWidth, CurrentHeight), "Graphic redaktor");
             window.SetFramerateLimit(60);
+            eventDrawables.Add(new GUI(new GUIFactoryA()));
             Subscribe();
             window.Closed+=Closed;
         }
@@ -42,9 +43,10 @@ namespace RealizationOfApp
                 window.DispatchEvents();
                 DeleteObjects();
                 window.Clear(new(236, 253, 230));
-                foreach (EventDrawable eventDrawable in eventDrawables)
+                foreach (EventDrawable eventDrawable in eventDrawables.Where(x=>x is not GUI))
                     window.Draw(eventDrawable);
                 window.Draw(field);
+                window.Draw(eventDrawables.Where(x => x is GUI).First());
                 window.Draw(messageBox);
                 mousePosLast = Mouse.GetPosition(window);
                 window.Display();
@@ -71,13 +73,13 @@ namespace RealizationOfApp
 
         public void MouseMoved(object? source, MouseMoveEventArgs e)
         {
-            for (int i = 0; i< eventHandlers.Count; ++i)
-            {
-                eventHandlers[i].MouseMoved(this, e);
-            }
             for (int i = 0; i<eventDrawables.Count; ++i)
             {
                 eventDrawables[i].MouseMoved(this, e);
+            }
+            for (int i = 0; i< eventHandlers.Count; ++i)
+            {
+                eventHandlers[i].MouseMoved(this, e);
             }
         }
         public void MouseButtonPressed(object? source, MouseButtonEventArgs e)

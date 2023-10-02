@@ -16,5 +16,17 @@ namespace RealizationOfApp
             special.SetCharacterSize(15);
             return special;
         }
+        public static Textbox GetShabloneTextbox()
+        {
+            Textbox textbox = new();
+            textbox.SetFillColorText(Color.Black);
+            textbox.SetFillColorRect(Color.White);
+            textbox.SetOutlineColorRect(Color.Black);
+            textbox.SetOutlineThicknessRect(2);
+            textbox.SetSizeRect(125, 50);
+            textbox.SetSizeCharacterText(12);
+            textbox.SetString("NO TEXT");
+            return textbox;
+        }
     }
 }

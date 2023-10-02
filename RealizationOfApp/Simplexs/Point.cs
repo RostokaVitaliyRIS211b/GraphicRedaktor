@@ -10,7 +10,6 @@ namespace RealizationOfApp.Simplexs
 {
     public class Point : EvObject
     { 
-    
         public static int Counter { get; protected set; }
         protected SpecialCircleTextbox circle = new();
         public bool IsCatched = false;
