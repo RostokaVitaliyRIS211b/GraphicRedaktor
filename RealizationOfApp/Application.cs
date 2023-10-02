@@ -9,6 +9,7 @@ namespace RealizationOfApp
         public List<IEventHandler> eventHandlers = new();
         public uint CurrentWidth = 1280, CurrentHeight = 720;
         public Textbox messageBox = new();
+        public bool isCanResetString = true;
         RectangleShape field;
         //public View view = new();
         public RenderWindow window;
@@ -31,7 +32,7 @@ namespace RealizationOfApp
             field.OutlineColor = Color.Black;
             field.OutlineThickness = 2;
             window = new RenderWindow(new VideoMode(CurrentWidth, CurrentHeight), "Graphic redaktor");
-            window.SetFramerateLimit(60);
+            window.SetFramerateLimit(144);
             eventDrawables.Add(new GUI(new GUIFactoryA()));
             Subscribe();
             window.Closed+=Closed;
@@ -70,7 +71,12 @@ namespace RealizationOfApp
             window.MouseButtonPressed-=MouseButtonPressed;
             window.MouseWheelScrolled-=MouseWheelScrolled;
         }
-
+        public void SetString(string message)
+        {
+            if(isCanResetString)
+                messageBox.SetString(message);
+            messageBox.SetPos(100, 30);
+        }
         public void MouseMoved(object? source, MouseMoveEventArgs e)
         {
             for (int i = 0; i<eventDrawables.Count; ++i)

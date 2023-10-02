@@ -37,6 +37,12 @@ namespace RealizationOfApp.Simplexs
         }
         public (float, float, float) GetEquvalence() => (Point2.Position.X-Point1.Position.X,Point1.Position.Y-Point2.Position.Y,
             Point1.Position.X*Point2.Position.Y-Point2.Position.X*Point1.Position.Y);
+        public (float,float,float) GetEqualenceInGrid()
+        {
+            Vector2f point1 = Grid.PixelToAnalogCoords(Point1.Position);
+            Vector2f point2 = Grid.PixelToAnalogCoords(Point2.Position);
+            return (point2.X-point1.X,point1.Y-point2.Y,point1.X*point2.Y-point2.X*point1.Y);
+        }
         public override bool Contains(float x, float y)
         {
             (float, float, float) coef = GetEquvalence();

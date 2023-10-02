@@ -30,6 +30,11 @@ namespace RealizationOfApp.Creators
                     line.Point1.Move(e.X-app.mousePosLast.X, e.Y-app.mousePosLast.Y);
                     line.Point2.Move(e.X-app.mousePosLast.X, e.Y-app.mousePosLast.Y);
                 }
+                else if(line.Contains(e.X, e.Y) && source is Application app2)
+                {
+                    (float, float, float) equalence = line.GetEqualenceInGrid();
+                    app2.SetString($"{equalence.Item1}:{equalence.Item2}:{equalence.Item3}");
+                }
             };
         }
         public Action<object?, MouseButtonEventArgs>? GetOnMouseButtonPressed(Line line)

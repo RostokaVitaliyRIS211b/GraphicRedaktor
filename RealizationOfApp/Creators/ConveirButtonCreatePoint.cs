@@ -31,7 +31,7 @@ namespace RealizationOfApp.Creators
                         eventHandler.OnMouseButtonPressed+=MousePressedCreatePoint;
                         eventHandler.OnKeyPressed+=KeyEscUnSubscribe;
                         isSubscribed = true;
-                        app.messageBox.SetString("Режим: Создать точку");
+                        app.SetString("Режим: Создать точку");
                         app.messageBox.SetPos(100, 30);
                     }
                     else
@@ -65,7 +65,9 @@ namespace RealizationOfApp.Creators
                     enterText.IsAlive = true;
                     eventHandler.conveirPoint.ProcessObj(p);
                     app.eventDrawables.Add(enterText);
-                    app.messageBox.SetString("Введите имя точки");
+                    app.isCanResetString = true;
+                    app.SetString("Введите имя точки");
+                    app.isCanResetString = false;
                     app.messageBox.SetPos(100, 30);
                 }
             }
@@ -82,7 +84,8 @@ namespace RealizationOfApp.Creators
             eventHandler.OnMouseButtonPressed-=MousePressedCreatePoint;
             eventHandler.OnKeyPressed-=KeyEscUnSubscribe;
             isSubscribed = false;
-            app.messageBox.SetString("Режим:");
+            app.isCanResetString = true;
+            app.SetString("Режим:");
             app.messageBox.SetPos(100, 30);
         }
     }

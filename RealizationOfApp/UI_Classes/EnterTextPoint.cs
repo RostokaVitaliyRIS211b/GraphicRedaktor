@@ -36,12 +36,16 @@ namespace RealizationOfApp.UI_Classes
                 }) is null)
                 {
                     point.Name = newName;
-                    app.messageBox.SetString("Режим: Создать точку");
+                    app.isCanResetString = true;
+                    app.SetString("Режим: Создать точку");
+                    app.isCanResetString = false;
                     app.messageBox.SetPos(100, 30);
                 }
                 else
                 {
-                    app.messageBox.SetString("Такое имя уже существует");
+                    app.isCanResetString = true;
+                    app.SetString("Такое имя уже существует");
+                    app.isCanResetString = false;
                     app.messageBox.SetPos(100, 30);
                 }
                 IsNeedToRemove = true;

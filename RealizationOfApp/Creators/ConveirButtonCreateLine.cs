@@ -30,7 +30,9 @@ namespace RealizationOfApp.Creators
                         eventHandler.OnMouseButtonPressed+=MousePressedCreateLine;
                         eventHandler.OnKeyPressed+=KeyEscUnSubscribe;
                         isSubscribed = true;
-                        app.messageBox.SetString("Режим: Создать Прямую");
+                        app.isCanResetString = true;
+                        app.SetString("Режим: Создать Прямую");
+                        app.isCanResetString = false;
                         app.messageBox.SetPos(100, 30);
                     }
                     else
@@ -81,11 +83,20 @@ namespace RealizationOfApp.Creators
         }
         void UnSubscribe(Application app)
         {
-            eventHandler.OnMouseButtonPressed-=MousePressedCreateLine;
-            eventHandler.OnKeyPressed-=KeyEscUnSubscribe;
-            isSubscribed = false;
-            app.messageBox.SetString("Режим:");
-            app.messageBox.SetPos(100, 30);
+            Line? line = (from elem in app.eventDrawables
+                          where elem is Line
+                          let ln = elem as Line
+                          where ln.IsCatched
+                          select ln).FirstOrDefault();
+            if(line is null)
+            {
+                eventHandler.OnMouseButtonPressed-=MousePressedCreateLine;
+                eventHandler.OnKeyPressed-=KeyEscUnSubscribe;
+                isSubscribed = false;
+                app.isCanResetString = true;
+                app.SetString("Режим:");
+                app.messageBox.SetPos(100, 30);
+            }
         }
     }
 }

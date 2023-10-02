@@ -105,9 +105,10 @@ namespace RealizationOfApp.UI_Classes
             arrowX = new(new Vector2f(currentWidth, currentCenter.Y), 1);
             arrowY = new Arrow(new Vector2f(currentCenter.X, 0), 0);
         }
-        public static Vector2f PixelToAnalogCoords(Vector2f coords) => new Vector2f((coords.X-CurrentCenter.X)/LengthOneDividePX, (coords.Y-CurrentCenter.Y)/LengthOneDividePX);
+        public static Vector2f PixelToAnalogCoords(Vector2f coords) => new Vector2f((coords.X-CurrentCenter.X)/LengthOneDividePX, -((coords.Y-CurrentCenter.Y)/LengthOneDividePX));
         public override void Move(float deltaX, float deltaY)
         {
+            CurrentCenter+=new Vector2f(deltaX, deltaY);
             arrowX.Position = new Vector2f(arrowX.Position.X, arrowX.Position.Y+deltaY);
             arrowY.Position = new Vector2f(arrowY.Position.X+deltaX, arrowY.Position.Y);
             for (int i = 0; i<vertLines.Count; ++i)
