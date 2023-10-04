@@ -30,7 +30,6 @@ namespace RealizationOfApp.Creators
                 {
                     Vector2f coordsGrid = Grid.PixelToAnalogCoords(point.Position);
                     app.SetString($"({coordsGrid.X}:{coordsGrid.Y})");
-                    app.messageBox.SetPos(100, 30);
                 }
             };
         }
@@ -58,6 +57,33 @@ namespace RealizationOfApp.Creators
             return (source, e) =>
             {
                 point.IsTextVisible = IsKeyPressed(Key.LAlt);
+                if(source is Application app && point.Contains((Vector2f)app.mousePosLast))
+                {
+                    if(e.Code==Key.Up)
+                    {
+                        point.Position+=new Vector2f(0, -1);
+                        Vector2f coordsGrid = Grid.PixelToAnalogCoords(point.Position);
+                        app.SetString($"({coordsGrid.X}:{coordsGrid.Y})");
+                    }
+                    else if(e.Code==Key.Down)
+                    {
+                        point.Position+=new Vector2f(0, 1);
+                        Vector2f coordsGrid = Grid.PixelToAnalogCoords(point.Position);
+                        app.SetString($"({coordsGrid.X}:{coordsGrid.Y})");
+                    }
+                    else if (e.Code==Key.Left)
+                    {
+                        point.Position+=new Vector2f(-1, 0);
+                        Vector2f coordsGrid = Grid.PixelToAnalogCoords(point.Position);
+                        app.SetString($"({coordsGrid.X}:{coordsGrid.Y})");
+                    }
+                    else if (e.Code==Key.Right)
+                    {
+                        point.Position+=new Vector2f(1, 0);
+                        Vector2f coordsGrid = Grid.PixelToAnalogCoords(point.Position);
+                        app.SetString($"({coordsGrid.X}:{coordsGrid.Y})");
+                    }
+                }
             };
         }
         public Action<object?, KeyEventArgs>? GetOnKeyReleased(Point point)

@@ -23,7 +23,7 @@ namespace RealizationOfApp.Simplexs
             point1.IGetRemoved+=x => this.IsNeedToRemove = x==Point1 || x==Point2;
             point2.IGetRemoved+=x => this.IsNeedToRemove = x==Point1 || x==Point2;
         }
-        public float Dlina()
+        public float Length()
         {
             return (float)Math.Sqrt(Math.Pow(Point1.Position.X-Point2.Position.X, 2)+Math.Pow(Point1.Position.Y-Point2.Position.Y, 2));
         }
@@ -35,21 +35,21 @@ namespace RealizationOfApp.Simplexs
         {
             return new Vertex[2] { new Vertex(Point1.Position, LineColor), new Vertex(Point2.Position, LineColor) };
         }
-        public (float, float, float) GetEquvalence() => (Point2.Position.X-Point1.Position.X,Point1.Position.Y-Point2.Position.Y,
+        public (float, float, float) GetEquvalence() => (Point1.Position.Y-Point2.Position.Y, Point2.Position.X-Point1.Position.X,
             Point1.Position.X*Point2.Position.Y-Point2.Position.X*Point1.Position.Y);
         public (float,float,float) GetEqualenceInGrid()
         {
             Vector2f point1 = Grid.PixelToAnalogCoords(Point1.Position);
             Vector2f point2 = Grid.PixelToAnalogCoords(Point2.Position);
-            return (point2.X-point1.X,point1.Y-point2.Y,point1.X*point2.Y-point2.X*point1.Y);
+            return (point1.Y-point2.Y, point2.X-point1.X, point1.X*point2.Y-point2.X*point1.Y);
         }
         public override bool Contains(float x, float y)
         {
+            const double MAX_LENGTH_TO_POINT = 10;
             (float, float, float) coef = GetEquvalence();
-            float deltaB=5000;
             float dlina1 = Dlina(Point1.Position, new(x, y)), dlina2 = Dlina(Point2.Position, new(x, y));
-            float dlinaLine = Dlina();
-            return (coef.Item1*y+coef.Item2*x+coef.Item3-deltaB)<0 && (coef.Item1*y+coef.Item2*x+coef.Item3+deltaB)>0 && dlina1<dlinaLine && dlina2<dlinaLine;
+            float dlinaLine = Length();
+            return (Math.Abs(coef.Item1*x+coef.Item2*y+coef.Item3)/Math.Sqrt(coef.Item1*coef.Item1+coef.Item2*coef.Item2))<=MAX_LENGTH_TO_POINT && dlina1<dlinaLine-20 && dlina2<dlinaLine-20;
         }
         public override void Draw(RenderTarget target, RenderStates states)
         {
