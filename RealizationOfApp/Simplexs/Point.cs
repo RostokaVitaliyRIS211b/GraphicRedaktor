@@ -9,12 +9,13 @@ using System.Xml.Linq;
 namespace RealizationOfApp.Simplexs
 {
     public class Point : EvObject
-    { 
-        public static int Counter { get; protected set; }
+    {
+        public static int Counter { get; protected set; } = 1;
         protected SpecialCircleTextbox circle = new();
         public bool IsCatched = false;
         public event Action<Point>? IGetRemoved;
         public string Name { get => circle.GetString(); set => circle.SetString(value); }
+        protected float inDescreteCoordinate = 1;
         public override bool IsNeedToRemove
         {
             get => base.IsNeedToRemove;
@@ -45,6 +46,13 @@ namespace RealizationOfApp.Simplexs
         public Color BuffColor { get; }
         public Color FillColor { get => circle.GetFillColorCircle(); set => circle.SetFillColorCircle(value); }
         public Vector2f Position { get => circle.GetPosition(); set => circle.SetPosition(value); }
+        public (float, float, float) PositionKG { get => (Position.X,Position.Y,inDescreteCoordinate); 
+            set 
+            {
+                Position = new(value.Item1, value.Item2);
+                inDescreteCoordinate = value.Item3;
+            } 
+        }
 
         public bool Contains(Vector2f vector)
         {

@@ -102,6 +102,10 @@ namespace RealizationOfApp
         }
         public void MouseButtonReleased(object? source, MouseButtonEventArgs e)
         {
+            for (int i = 0; i< eventHandlers.Count; ++i)
+            {
+                eventHandlers[i].MouseButtonReleased(this, e);
+            }
             for (int i = 0; i<eventDrawables.Count; ++i)
             {
                 eventDrawables[i].MouseButtonReleased(this, e);

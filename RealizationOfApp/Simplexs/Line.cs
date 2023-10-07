@@ -45,7 +45,7 @@ namespace RealizationOfApp.Simplexs
         }
         public override bool Contains(float x, float y)
         {
-            const double MAX_LENGTH_TO_POINT = 10;
+            const double MAX_LENGTH_TO_POINT = 15;
             (float, float, float) coef = GetEquvalence();
             float dlina1 = Dlina(Point1.Position, new(x, y)), dlina2 = Dlina(Point2.Position, new(x, y));
             float dlinaLine = Length();
