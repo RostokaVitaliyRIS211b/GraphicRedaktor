@@ -7,7 +7,6 @@
         protected List<Vector2f> oldPositions = new();
         protected Point? pointOfRotate;
         protected Matrix matrixComplexLeft = new();
-        protected Matrix matrixComplexRight = new();
         protected int counter = 0;
         bool isSubscribed = false;
         public void ProcessObj(EvButton obj)
@@ -112,16 +111,13 @@
                 matrixComplexLeft.AddLastString(new float[] { 0, 0, 0 });
                 matrixComplexLeft.AddLastString(new float[] { 0, 0, 0 });
                 matrixComplexLeft.AddLastString(new float[] { 0, 0, 1 });
-                matrixComplexRight.AddLastString(new float[] { 0, 0, 0 });
-                matrixComplexRight.AddLastString(new float[] { 0, 0, 0 });
-                matrixComplexRight.AddLastString(new float[] { 0, 0, 1 });
             }
         }
         void KeyRotate(object? source, KeyEventArgs e)
         {
-            if (e.Code==Key.Q && source is Application app)
+            if (e.Code==Key.Q || e.Code==Key.E && source is Application app)
             {
-                counter+=1;
+                counter = e.Code==Key.Q?counter+1:counter-1;
                 counter%=360;
                 UpdateMatrixs();
                 for (int i = 0; i<selectePoints.Count; ++i)
@@ -130,22 +126,6 @@
                     Matrix matrix = new();
                     matrix.AddLastString(new float[] { pos.X, pos.Y, selectePoints[i].PositionKG.Item3 });
                     matrix*=matrixComplexLeft;
-                    pos = new(matrix[0, 0]/matrix[0, 2], matrix[0, 1]/matrix[0, 2]);
-                    pos = Grid.AnalogToPixelCoords(pos);
-                    selectePoints[i].PositionKG = (pos.X, pos.Y, 1);
-                }
-            }
-            if (e.Code==Key.E && source is Application app2)
-            {
-                counter-=1;
-                counter%=360;
-                UpdateMatrixs();
-                for (int i = 0; i<selectePoints.Count; ++i)
-                {
-                    Vector2f pos = Grid.PixelToAnalogCoords(oldPositions[i]);
-                    Matrix matrix = new();
-                    matrix.AddLastString(new float[] { pos.X, pos.Y, selectePoints[i].PositionKG.Item3 });
-                    matrix*=matrixComplexRight;
                     pos = new(matrix[0, 0]/matrix[0, 2], matrix[0, 1]/matrix[0, 2]);
                     pos = Grid.AnalogToPixelCoords(pos);
                     selectePoints[i].PositionKG = (pos.X, pos.Y, 1);
@@ -187,12 +167,6 @@
             matrixComplexLeft[1, 0] = -sin; matrixComplexLeft[1, 1]=cos;
             matrixComplexLeft[2, 0] = -analog.X*cos+sin*analog.Y+analog.X;
             matrixComplexLeft[2, 1] = -analog.Y*cos-analog.X*sin+analog.Y;
-            sin = -sin;
-            matrixComplexRight[0, 0] = cos; matrixComplexRight[0, 1]=sin;
-            matrixComplexRight[1, 0] = -sin; matrixComplexRight[1, 1]=cos;
-            matrixComplexRight[2, 0] = -analog.X*cos+sin*analog.Y+analog.X;
-            matrixComplexRight[2, 1] = -analog.Y*cos-analog.X*sin+analog.Y;
         }
-
     }
 }
