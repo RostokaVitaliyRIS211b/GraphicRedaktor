@@ -25,12 +25,17 @@ namespace RealizationOfApp.Creators
                 {
                     point.Position = new Vector2f(e.X, e.Y);
                 }
-                point.FillColor = point.Contains(e.X, e.Y) ? Color.Magenta : point.BuffColor;
                 if (point.Contains(e.X, e.Y) && source is Application app)
                 {
+                    point.FillColor = point.FillColor==point.BuffColor ? Color.Magenta : point.FillColor;
                     Vector2f coordsGrid = Grid.PixelToAnalogCoords(point.Position);
                     app.SetString($"({coordsGrid.X}:{coordsGrid.Y})");
                 }
+                else
+                {
+                    point.FillColor=point.FillColor==Color.Magenta ? point.BuffColor : point.FillColor;
+                }
+
             };
         }
         public Action<object?, MouseButtonEventArgs>? GetOnMouseButtonPressed(Point point)
