@@ -1,5 +1,4 @@
-﻿using SfmlAppLib;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -7,22 +6,21 @@ using System.Threading.Tasks;
 
 namespace RealizationOfApp.Creators
 {
-    public class ConveirButtonScale
+    public class ConveirButtonTransfer
     {
         protected GlobalEventHandler eventHandler;
         protected List<Point> selectePoints = new();
-        protected Point? pointOfScale;
-        protected Matrix matrixScale = new();
+        protected Matrix matrixTransfer = new();
         protected int counter = 0;
         protected bool isSubscribed = false;
-        protected float? xScale = null, yScale = null;
+        protected float? xDelta = null, yDelta = null;
         public void ProcessObj(EvButton obj)
         {
             obj.OnMouseButtonReleased+=GetOnMouseButtonReleased(obj);
             obj.OnMouseMoved+=MouseMovedPaintPoints;
-            matrixScale.AddLastString(new float[] { 0, 0, 0 });
-            matrixScale.AddLastString(new float[] { 0, 0, 0 });
-            matrixScale.AddLastString(new float[] { 0, 0, 1 });
+            matrixTransfer.AddLastString(new float[] { 1, 0, 0 });
+            matrixTransfer.AddLastString(new float[] { 0, 1, 0 });
+            matrixTransfer.AddLastString(new float[] { 0, 0, 1 });
         }
         public Action<object?, ICollection<EventDrawableGUI>, MouseButtonEventArgs>? GetOnMouseButtonReleased(EvButton evButton)
         {
@@ -37,11 +35,12 @@ namespace RealizationOfApp.Creators
 
                     if (!isSubscribed)
                     {
-                        eventHandler.OnMouseButtonReleased+=MouseButtonReleased_SelectPointOfScale;
+                        eventHandler.OnMouseButtonReleased+=MouseButtonReleased_SelectPointsToTransfer;
+                        eventHandler.OnKeyPressed+=KeyEndSelectPoints;
                         eventHandler.OnKeyPressed+=KeyEscUnSubscribe;
                         isSubscribed = true;
                         app.isCanResetString = true;
-                        app.SetString("Режим: Выбор точки\n масштабирования");
+                        app.SetString("Режим: Выбор точек\nдля перемещения");
                         app.isCanResetString = false;
                     }
                     else
@@ -63,35 +62,14 @@ namespace RealizationOfApp.Creators
                 evButton.IsAlive = false;
             };
         }
-        void MouseButtonReleased_SelectPointOfScale(object? source, MouseButtonEventArgs e)
+        void MouseButtonReleased_SelectPointsToTransfer(object? source, MouseButtonEventArgs e)
         {
             if (e.Button==Mouse.Button.Right && source is Application app && e.X>200)
             {
                 Point? pon = (from elem in app.eventDrawables
                               where elem is Point
                               let u = elem as Point
-                              where u.Contains(e.X, e.Y)
-                              select u).FirstOrDefault();
-                if (pon is not null)
-                {
-                    pointOfScale = pon;
-                    eventHandler.OnMouseButtonReleased-=MouseButtonReleased_SelectPointOfScale;
-                    eventHandler.OnMouseButtonReleased+=MouseButtonReleased_SelectPointsToScale;
-                    eventHandler.OnKeyPressed+=KeyEndSelectPoints;
-                    app.isCanResetString = true;
-                    app.SetString("Режим: Выбор точек\nдля масштабирования");
-                    app.isCanResetString = false;
-                }
-            }
-        }
-        void MouseButtonReleased_SelectPointsToScale(object? source, MouseButtonEventArgs e)
-        {
-            if (e.Button==Mouse.Button.Right && source is Application app && e.X>200)
-            {
-                Point? pon = (from elem in app.eventDrawables
-                              where elem is Point
-                              let u = elem as Point
-                              where u.Contains(e.X, e.Y) && u!=pointOfScale && !selectePoints.Contains(u)
+                              where u.Contains(e.X, e.Y) && !selectePoints.Contains(u)
                               select u).FirstOrDefault();
                 if (pon is not null)
                 {
@@ -112,18 +90,18 @@ namespace RealizationOfApp.Creators
             if (e.Code==Key.Enter  && source is Application app)
             {
                 app.isCanResetString = true;
-                app.SetString("Введите множитель\nмасштаба по оси X");
+                app.SetString("Режим: Введите перем\nещение по оси X");
                 app.isCanResetString = false;
                 EnterTextTexbox enterTextTexbox = new(new(640, 360));
                 enterTextTexbox.identify="X";
                 enterTextTexbox.IsAlive = true;
                 app.eventDrawables.Add(enterTextTexbox);
                 eventHandler.OnKeyPressed-=KeyEndSelectPoints;
-                eventHandler.OnMouseButtonReleased-=MouseButtonReleased_SelectPointsToScale;
-                eventHandler.OnKeyPressed+=KeyEnterScale;
+                eventHandler.OnMouseButtonReleased-=MouseButtonReleased_SelectPointsToTransfer;
+                eventHandler.OnKeyPressed+=KeyEnterDelta;
             }
         }
-        void KeyEnterScale(object? source, KeyEventArgs e)
+        void KeyEnterDelta(object? source, KeyEventArgs e)
         {
             if (e.Code==Key.Enter && source is Application app)
             {
@@ -137,32 +115,29 @@ namespace RealizationOfApp.Creators
                                                let u = elem as EnterTextTexbox
                                                where u.identify=="Y" && !u.IsAlive
                                                select u).FirstOrDefault();
-                if (enterTextX is not null && xScale is null)
+                if (enterTextX is not null && xDelta is null)
                 {
-                    xScale = float.Parse(enterTextX.textbox.GetString());
+                    xDelta = float.Parse(enterTextX.textbox.GetString());
                     enterTextX.IsNeedToRemove=true;
                     app.isCanResetString = true;
-                    app.SetString("Введите множитель\nмасштаба по оси Y");
+                    app.SetString("Режим: Введите перем\nещение по оси Y");
                     app.isCanResetString = false;
                     EnterTextTexbox enterTextTexbox = new(new(640, 360));
                     enterTextTexbox.identify="Y";
                     enterTextTexbox.IsAlive = true;
                     app.eventDrawables.Add(enterTextTexbox);
                 }
-                if (enterTextY is not null && yScale is null)
+                if (enterTextY is not null && yDelta is null)
                 {
-                    yScale = float.Parse(enterTextY.textbox.GetString());
+                    yDelta = float.Parse(enterTextY.textbox.GetString());
                     enterTextY.IsNeedToRemove=true;
-                    Vector2f pos2 = Grid.PixelToAnalogCoords(pointOfScale.Position);
-                    matrixScale[0, 0] = xScale ?? 1; matrixScale[0, 1] = 0;
-                    matrixScale[1, 0] = 0; matrixScale[1, 1] = yScale ?? 1;
-                    matrixScale[2, 0] = pos2.X-pos2.X*xScale ?? 1; matrixScale[2, 1] = pos2.Y-pos2.Y*yScale ?? 1;
+                    matrixTransfer[2, 0] = xDelta ?? 0; matrixTransfer[2, 1] = yDelta ?? 0;
                     foreach (Point p in selectePoints)
                     {
                         Vector2f pos = Grid.PixelToAnalogCoords(p.Position);
                         Matrix matrix = new();
                         matrix.AddLastString(new float[] { pos.X, pos.Y, p.PositionKG.Item3 });
-                        matrix*=matrixScale;
+                        matrix*=matrixTransfer;
                         pos = new Vector2f(matrix[0, 0]/matrix[0, 2], matrix[0, 1]/matrix[0, 2]);
                         pos = Grid.AnalogToPixelCoords(pos);
                         p.PositionKG = (pos.X, pos.Y, 1);
@@ -185,32 +160,26 @@ namespace RealizationOfApp.Creators
                                            let u = elem as EnterTextTexbox
                                            where u.identify=="Y" && !u.IsAlive
                                            select u).FirstOrDefault();
-            if(enterTextX is not null)
+            if (enterTextX is not null)
                 enterTextX.IsNeedToRemove=true;
             if (enterTextY is not null)
                 enterTextY.IsNeedToRemove=true;
-            eventHandler.OnMouseButtonReleased-=MouseButtonReleased_SelectPointOfScale;
-            eventHandler.OnMouseButtonReleased-=MouseButtonReleased_SelectPointsToScale;
+            eventHandler.OnMouseButtonReleased-=MouseButtonReleased_SelectPointsToTransfer;
             eventHandler.OnKeyPressed-=KeyEndSelectPoints;
             eventHandler.OnKeyPressed-=KeyEscUnSubscribe;
-            eventHandler.OnKeyPressed-=KeyEnterScale;
+            eventHandler.OnKeyPressed-=KeyEnterDelta;
             isSubscribed = false;
-            if (pointOfScale is not null)
-                pointOfScale.FillColor=pointOfScale.BuffColor;
-            pointOfScale = null;
             foreach (Point p in selectePoints)
                 p.FillColor=p.BuffColor;
             selectePoints.Clear();
-            xScale = null;
-            yScale = null;
+            xDelta = null;
+            yDelta = null;
             app.isCanResetString = true;
             app.SetString("Режим:");
             app.messageBox.SetPos(100, 30);
         }
         public void MouseMovedPaintPoints(object? source, ICollection<EventDrawableGUI> even, MouseMoveEventArgs e)
         {
-            if (pointOfScale is not null)
-                pointOfScale.FillColor=Color.Yellow;
             foreach (Point point in selectePoints)
             {
                 point.FillColor = Color.Green;

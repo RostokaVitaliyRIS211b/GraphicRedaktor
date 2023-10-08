@@ -1,11 +1,9 @@
 ﻿
-using System.Net.Http.Headers;
-
 namespace RealizationOfApp
 {
     public class Application
     {
-        //TODO Добавить масштабирование
+        //TODO Добавить перемещение на заданные координаты
         public List<EventDrawable> eventDrawables = new();
         public List<IEventHandler> eventHandlers = new();
         public uint CurrentWidth = 1280, CurrentHeight = 720;
