@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace RealizationOfApp.Creators
 {
-    public class ConveirButtonTransfer
+    public class ConveirButtonProjection
     {
         protected GlobalEventHandler eventHandler;
         protected List<Point> selectePoints = new();
-        protected Matrix matrixTransfer = new();
+        protected Matrix matrixProjection = new();
         protected int counter = 0;
         protected bool isSubscribed = false;
         protected float? xDelta = null, yDelta = null;
@@ -18,9 +18,9 @@ namespace RealizationOfApp.Creators
         {
             obj.OnMouseButtonReleased+=GetOnMouseButtonReleased(obj);
             obj.OnMouseMoved+=MouseMovedPaintPoints;
-            matrixTransfer.AddLastString(new float[] { 1, 0, 0 });
-            matrixTransfer.AddLastString(new float[] { 0, 1, 0 });
-            matrixTransfer.AddLastString(new float[] { 0, 0, 1 });
+            matrixProjection.AddLastString(new float[] { 1, 0, 0 });
+            matrixProjection.AddLastString(new float[] { 0, 1, 0 });
+            matrixProjection.AddLastString(new float[] { 0, 0, 1 });
         }
         public Action<object?, ICollection<EventDrawableGUI>, MouseButtonEventArgs>? GetOnMouseButtonReleased(EvButton evButton)
         {
@@ -40,7 +40,7 @@ namespace RealizationOfApp.Creators
                         eventHandler.OnKeyPressed+=KeyEscUnSubscribe;
                         isSubscribed = true;
                         app.isCanResetString = true;
-                        app.SetString("Режим: Выбор точек\nдля перемещения");
+                        app.SetString("Режим: Выбор точек\nдля проецирования");
                         app.isCanResetString = false;
                     }
                     else
@@ -90,7 +90,7 @@ namespace RealizationOfApp.Creators
             if (e.Code==Key.Enter  && source is Application app)
             {
                 app.isCanResetString = true;
-                app.SetString("Введите перемещение\n                     по оси X");
+                app.SetString("Введите проецирование\n                     по оси X");
                 app.isCanResetString = false;
                 EnterTextTexbox enterTextTexbox = new(new(640, 360));
                 enterTextTexbox.identify="X";
@@ -120,7 +120,7 @@ namespace RealizationOfApp.Creators
                     xDelta = float.Parse(enterTextX.textbox.GetString());
                     enterTextX.IsNeedToRemove=true;
                     app.isCanResetString = true;
-                    app.SetString("Введите перемещение\n                     по оси Y");
+                    app.SetString("Введите проецирование\n                     по оси Y");
                     app.isCanResetString = false;
                     EnterTextTexbox enterTextTexbox = new(new(640, 360));
                     enterTextTexbox.identify="Y";
@@ -131,13 +131,13 @@ namespace RealizationOfApp.Creators
                 {
                     yDelta = float.Parse(enterTextY.textbox.GetString());
                     enterTextY.IsNeedToRemove=true;
-                    matrixTransfer[2, 0] = xDelta ?? 0; matrixTransfer[2, 1] = yDelta ?? 0;
+                    matrixProjection[0, 2] = xDelta ?? 0; matrixProjection[1, 2] = yDelta ?? 0;
                     foreach (Point p in selectePoints)
                     {
                         Vector2f pos = Grid.PixelToAnalogCoords(p.Position);
                         Matrix matrix = new();
                         matrix.AddLastString(new float[] { pos.X, pos.Y, p.PositionKG.Item3 });
-                        matrix*=matrixTransfer;
+                        matrix*=matrixProjection;
                         pos = new Vector2f(matrix[0, 0]/matrix[0, 2], matrix[0, 1]/matrix[0, 2]);
                         pos = Grid.AnalogToPixelCoords(pos);
                         p.PositionKG = (pos.X, pos.Y, 1);
