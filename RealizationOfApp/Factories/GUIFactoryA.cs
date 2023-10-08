@@ -13,6 +13,7 @@ namespace RealizationOfApp.Factories
             ConveirButtonCreateLine conveirButtonCreateLine = new();
             ConveirButtonRotation conveirButtonRotation = new();
             ConveirButtonMirroring conveirButtonMirroring = new();
+            ConveirButtonScale conveirButtonScale = new();
             shablone.SetString("Создать точку");
             shablone.SetPos(95, 100);
             EvButton evButtonCreatePoint = new(new(shablone), "CreatePoint");
@@ -37,6 +38,12 @@ namespace RealizationOfApp.Factories
             conveirButtonStandart.ProcessObj(evButtonMirroring);
             conveirButtonMirroring.ProcessObj(evButtonMirroring);
             eventDrawableGUIs.Add(evButtonMirroring);
+            shablone.SetString("Масштабирование");
+            shablone.SetPos(95, 400);
+            EvButton evButtonScaling = new(new(shablone), "Scaling");
+            conveirButtonStandart.ProcessObj(evButtonScaling);
+            conveirButtonScale.ProcessObj(evButtonScaling);
+            eventDrawableGUIs.Add(evButtonScaling);
             return eventDrawableGUIs;
         }
         public override bool GetState() => true;

@@ -6,7 +6,6 @@ namespace RealizationOfApp.Creators
     {
         protected GlobalEventHandler eventHandler;
         protected List<Point> selectePoints = new();
-        protected List<Vector2f> oldPositions = new();
         protected Line? LineOfRotate;
         protected Matrix matrixMirroring = new();
         protected int counter = 0;
@@ -92,7 +91,6 @@ namespace RealizationOfApp.Creators
                 {
                     selectePoints.Add(pon);
                     pon.FillColor = Color.Green;
-                    oldPositions.Add(pon.Position);
                 }
             }
         }
@@ -125,29 +123,6 @@ namespace RealizationOfApp.Creators
                 else
                 {
                     float cos1 = MathF.Cos(angle), sin1 = MathF.Sin(angle), cos2 = MathF.Cos(-angle), sin2 = MathF.Sin(-angle);
-                    //matrixMirroring.AddLastString(new float[] { cos1*cos2+sin1*sin2, cos1*sin2-sin1*cos2, 0 });
-                    //matrixMirroring.AddLastString(new float[] { cos1*sin2-sin1*cos2, -sin1*sin2-cos1*cos2, 0 });
-                    //matrixMirroring.AddLastString(new float[] { y*sin1*cos2-y*cos1*sin2, y*sin1*sin2+y*cos1*cos2 + y, 1 });
-                    //Matrix CurrentMatrix = new();
-                    //CurrentMatrix.AddLastString(new float[] { cos1, sin1, 0 });
-                    //CurrentMatrix.AddLastString(new float[] { -sin1, cos1, 0 });
-                    //CurrentMatrix.AddLastString(new float[] { 0, 0, 1 });
-                    //matrixMirroring*=CurrentMatrix;
-                    //CurrentMatrix.Clear();
-                    //CurrentMatrix.AddLastString(new float[] { 1, 0, 0 });
-                    //CurrentMatrix.AddLastString(new float[] { 0, -1, 0 });
-                    //CurrentMatrix.AddLastString(new float[] { 0, 0, 1 });
-                    //matrixMirroring*=CurrentMatrix;
-                    //CurrentMatrix.Clear();
-                    //CurrentMatrix.AddLastString(new float[] { cos2, sin2, 0 });
-                    //CurrentMatrix.AddLastString(new float[] { -sin2, cos2, 0 });
-                    //CurrentMatrix.AddLastString(new float[] { 0, 0, 1 });
-                    //matrixMirroring*=CurrentMatrix;
-                    //CurrentMatrix.Clear();
-                    //CurrentMatrix.AddLastString(new float[] { 1, 0, 0 });
-                    //CurrentMatrix.AddLastString(new float[] { 0, 1, 0 });
-                    //CurrentMatrix.AddLastString(new float[] { 0, y, 1 });
-                    //matrixMirroring*=CurrentMatrix;
                     matrixMirroring[0, 0]=cos1*cos2+sin1*sin2; matrixMirroring[0, 1]=cos1*sin2-sin1*cos2;
                     matrixMirroring[1, 0]=cos1*sin2-sin1*cos2; matrixMirroring[1, 1]=-sin1*sin2-cos1*cos2;
                     matrixMirroring[2, 0]=y*sin1*cos2-y*cos1*sin2; matrixMirroring[2, 1]=y*sin1*sin2+y*cos1*cos2 + y;
@@ -165,7 +140,6 @@ namespace RealizationOfApp.Creators
                 UnSubscribe(app);
             }
         }
-        
         void UnSubscribe(Application app)
         {
             eventHandler.OnMouseButtonReleased-=MouseButtonReleased_SelecLineOfMirroring;

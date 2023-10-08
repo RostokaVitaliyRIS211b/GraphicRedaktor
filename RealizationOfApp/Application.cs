@@ -114,13 +114,13 @@ namespace RealizationOfApp
         }
         public void KeyPressed(object? source, KeyEventArgs e)
         {
-            for (int i = 0; i< eventHandlers.Count; ++i)
-            {
-                eventHandlers[i].KeyPressed(this, e);
-            }
             for (int i = 0; i<eventDrawables.Count; ++i)
             {
                 eventDrawables[i].KeyPressed(this, e);
+            }
+            for (int i = 0; i< eventHandlers.Count; ++i)
+            {
+                eventHandlers[i].KeyPressed(this, e);
             }
         }
         public void KeyReleased(object? source, KeyEventArgs e)

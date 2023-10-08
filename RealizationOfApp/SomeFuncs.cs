@@ -20,6 +20,10 @@ public static class SomeFuncs
         {
             text+=(char)(key + 22);
         }
+        else if(key == Key.Comma)
+        {
+            text+=',';
+        }
         else if (key==Keyboard.Key.Backspace && text.Length>0)
         {
             text = text.Remove(text.Length-1, 1);

@@ -83,6 +83,11 @@ namespace RealizationOfApp.Creators
         {
             eventHandler.OnMouseButtonPressed-=MousePressedCreatePoint;
             eventHandler.OnKeyPressed-=KeyEscUnSubscribe;
+            EnterTextPoint? enterTextPoint = (from elem in app.eventDrawables
+                                              where elem is EnterTextPoint
+                                              select elem as EnterTextPoint).FirstOrDefault();
+            if (enterTextPoint is not null)
+                enterTextPoint.IsNeedToRemove=true;
             isSubscribed = false;
             app.isCanResetString = true;
             app.SetString("Режим:");
