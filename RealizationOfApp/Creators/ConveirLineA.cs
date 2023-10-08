@@ -23,17 +23,31 @@ namespace RealizationOfApp.Creators
             {
                 if (line.IsCatched && line.IsAlive)
                     line.Point2.Position = new Vector2f(e.X,e.Y);
-                line.LineColor = line.Contains(e.X, e.Y) ? Color.Magenta : bufFColor;
+                
                 if(line.Contains(e.X, e.Y) && Mouse.IsButtonPressed(Mouse.Button.Left) && source is Application app 
                 && !line.Point1.Contains(e.X,e.Y) && !line.Point2.Contains(e.X, e.Y))
                 {
-                    line.Point1.Move(e.X-app.mousePosLast.X, e.Y-app.mousePosLast.Y);
-                    line.Point2.Move(e.X-app.mousePosLast.X, e.Y-app.mousePosLast.Y);
+
+                    Point? p = (from elem in app.eventDrawables
+                                where elem is Point
+                                let u = elem as Point
+                                where u.Contains(e.X, e.Y) || u.IsCatched
+                                select u).FirstOrDefault();
+                    if(p is null)
+                    {
+                        line.Point1.Move(e.X-app.mousePosLast.X, e.Y-app.mousePosLast.Y);
+                        line.Point2.Move(e.X-app.mousePosLast.X, e.Y-app.mousePosLast.Y);
+                    }
                 }
                 else if(line.Contains(e.X, e.Y) && source is Application app2)
                 {
-                    (float, float, float) equalence = line.GetEqualenceInGrid();
-                    app2.SetString($"{equalence.Item1}:{equalence.Item2}:{equalence.Item3}");
+                     line.LineColor = line.LineColor==bufFColor ? Color.Magenta : line.LineColor;
+                     (float, float, float) equalence = line.GetEqualenceInGrid();
+                     app2.SetString($"{equalence.Item1}:{equalence.Item2}:{equalence.Item3}");
+                }
+                else
+                {
+                    line.LineColor = line.LineColor==Color.Magenta ? bufFColor : line.LineColor;
                 }
             };
         }

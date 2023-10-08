@@ -4,7 +4,6 @@ namespace RealizationOfApp.Simplexs
 {
     public class Line : EvObject
     {
-        //TODO добавить Contains
         public Point Point1 { get; set; }
         public Point Point2 { get; set; }
         public Color LineColor { get; set; } = Color.Black;

@@ -8,7 +8,6 @@ namespace RealizationOfApp.Creators
 {
     public class ConveirPointA : IConveir<Point>
     {
-        //TODO Добавить прилипание к сетке по координатам кратным едичиному делению сетки
         public void ProcessObj(Point obj)
         {
             obj.OnMouseMoved+=GetOnMouseMoved(point: obj);
