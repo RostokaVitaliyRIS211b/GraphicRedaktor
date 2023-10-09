@@ -13,6 +13,9 @@
         {
             obj.OnMouseButtonReleased+=GetOnMouseButtonReleased(obj);
             obj.OnMouseMoved+=MouseMovedPaintPoints;
+            matrixComplexLeft.AddLastString(new float[] { 1, 0, 0 });
+            matrixComplexLeft.AddLastString(new float[] { 0, 1, 0 });
+            matrixComplexLeft.AddLastString(new float[] { 0, 0, 1 });
         }
         public Action<object?, ICollection<EventDrawableGUI>, MouseButtonEventArgs>? GetOnMouseButtonReleased(EvButton evButton)
         {
@@ -108,9 +111,7 @@
                 app.isCanResetString = true;
                 app.SetString("Вращение");
                 app.isCanResetString = false;
-                matrixComplexLeft.AddLastString(new float[] { 0, 0, 0 });
-                matrixComplexLeft.AddLastString(new float[] { 0, 0, 0 });
-                matrixComplexLeft.AddLastString(new float[] { 0, 0, 1 });
+                counter=0;
             }
         }
         void KeyRotate(object? source, KeyEventArgs e)
@@ -146,6 +147,8 @@
             foreach (Point p in selectePoints)
                 p.FillColor=p.BuffColor;
             selectePoints.Clear();
+            oldPositions.Clear();
+            counter=0;
             app.isCanResetString = true;
             app.SetString("Режим:");
             app.messageBox.SetPos(100, 30);
