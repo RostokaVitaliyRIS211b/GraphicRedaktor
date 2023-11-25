@@ -2,8 +2,18 @@
 
 namespace RealizationOfApp.Factories
 {
+    /// <summary>
+    /// Фабрика для 2d графики
+    /// </summary>
     public class GUIFactoryA:AbstractGUIFactory
     {
+        /// <summary>
+        /// Фабрика для 2d графики
+        /// </summary>
+        public GUIFactoryA()
+        {
+
+        }
         public override IList<EventDrawableGUI> CreateGUI()
         {
             List<EventDrawableGUI> eventDrawableGUIs = new();
